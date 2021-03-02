@@ -1,0 +1,150 @@
+<head>
+  <script>
+    if (typeof module === 'object') {
+      window.module = module
+      module = undefined
+    }
+  </script>
+
+  <!-- Latest compiled and minified CSS -->
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='s.scss.css')}}" />
+  <script type="text/javascript" src="{{ url_for('static', filename='variables.js')}}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='_attributes.js')}}" defer></script>
+  <script>
+    if (window.module) module = window.module
+  </script>
+
+  <title>DC Projects</title>
+</head>
+
+<body>
+  <div class="row">
+    <div id="search-block" class="col">
+      <input id="dir-input" />
+    </div>
+
+    <div id="bookmarks" class="col">
+      <div class="dropdown open m-4">
+        <button id="triggerId">Bookmarks</button>
+        <div id="bookmark-dropdown"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="info-bar" class="container m-3">
+    <span id="search-info">
+      Searching project
+      <strong id="search-type"></strong>
+    </span>
+  </div>
+
+  <div id="jumbo" class="jumbotron p-2">
+    <div class="row">
+      <p id="current-project-name"></p>
+      <p id="current-project-num"></p>
+      <a id="display-prNumber">Name</a>
+      <button id="bookmark-toggle">Bookmarked</button>
+    </div>
+    <hr class="my-2" />
+
+    <div class="row">
+      <p id="display-prName" class="col-9 m-4 lead">Number</p>
+      <div class="col d-flex align-items-center">
+        <div id="spinner" class="ml-auto spinner-border" role="status"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="search-results" class="container m-3">
+    <ul class="list-group">
+      <div id="pr-buttons"></div>
+    </ul>
+  </div>
+
+  <div id="dir-tree-content" class="container-fluid"></div>
+
+  <script>
+    const { ipcRenderer } = require('electron')
+    const fs = require('fs')
+    const process = require('process')
+    const path = require('path')
+
+    // bookmarks = path.join(__dirname, "bookmarks.json");
+
+    // let rawdata = fs.readFileSync(bookmarks);
+    // let bookmarkstwo = JSON.parse(rawdata);
+    console.log('dirname')
+    window.onload = () => {
+      console.log('[WINDOW LOADED]')
+
+      ipcRenderer.on('user-data', (event, args) => {
+        console.log('[WINDOW RECEIVED DATA]')
+        console.log(args)
+
+        userData = args
+
+        event.sender.send('user-data-reply', args)
+      })
+    }
+
+    bookmarkNames = new Array()
+
+    function loadBookmarks() {
+      bookmarkNames = []
+      $('#bookmark-dropdown').empty()
+      for (x of userData) {
+        let num = x.num.trim()
+        let name = x.name.trim()
+
+        bookmarkNames.push(name)
+
+        let bookmarkBtn = $('<button></button>').addClass('dropdown-item', 'bookmark')
+
+        $(bookmarkBtn).html(name)
+        $(bookmarkBtn).attr({
+          onclick: `preDataOps(\"${num}\", \"${name}\")`,
+          href: '#',
+          id: 'bookmark-item',
+        })
+
+        $('#bookmark-dropdown').append(bookmarkBtn)
+      }
+    }
+
+    function setBookmark() {
+      let name = $('#display-prName').text()
+      let num = $('#embedded-data').attr('number')
+
+      let target = {
+        name: name,
+        num: num,
+      }
+
+      if ($('#bookmark-toggle').html() == 'Bookmarked') {
+        $('#bookmark-toggle').html('Bookmark')
+        ipcRenderer.send('removeBookmark', target)
+      } else {
+        $('#bookmark-toggle').html('Bookmarked')
+        ipcRenderer.send('setBookmark', target)
+      }
+      userDataLoaded = false
+
+      // target = JSON.stringify(target);
+    }
+
+    function linkManager(elem) {
+      filePath = $(elem).attr('data-clipboard-target')
+
+      console.log(elem)
+      console.log(filePath)
+      ipcRenderer.send('closeInfoWindow', filePath)
+    }
+  </script>
+</body>

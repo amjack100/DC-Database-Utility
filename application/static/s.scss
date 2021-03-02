@@ -1,0 +1,22 @@
+@import "./custom";
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
+#current-project-name {
+  display: none;
+}
+#current-project-num {
+  display: none;
+}
+#jumbo {
+  display: none;
+}
+#search-info {
+  display: none;
+}
+#bookmark-dropdown {
+  min-width: 650px;
+}
+::-webkit-scrollbar {
+  display: none;
+}

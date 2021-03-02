@@ -1,0 +1,59 @@
+<div id="embedded-data" directory="{{ path }}" name="{{ name }}" number="{{ number }}"></div>
+
+
+<div class="container">
+  
+  <div class="row">
+    
+    <div class="col">
+      
+         
+          {% for element in scandir(path) %}
+          <!-- <div></div> -->
+          {% if element.is_dir() %}
+          <!-- <div></div> -->
+          <div class="btn-group btn-block">
+            <button type="button" class="btn btn-light" data-clipboard-target="{{ element.path }}" onclick="linkManager(this)">
+              <a href="javascript:void(0)"> {{ element.name }} </a>
+            </button>
+            <button type="checkbox" aria-expanded="false" class="btn btn-secondary dropdown-toggle collapsed" data-toggle="collapse" data-target="#{{ element.name }}"></button>
+          </div>
+          
+          {% endif %}
+          <!-- 0 -->
+          {% endfor %}
+        </div>
+        
+      <!-- o -->
+      <!-- <div class="col"> -->
+      <div class="col">
+                  {% for element in scandir(path) recursive %}
+          <!-- o -->
+          {% if element.is_dir() %}
+          <!-- o -->
+        {% if loop.depth == 1 %}
+        <ul id="{{ element.name }}" class="collapse">
+          {% else %}
+          <ul id="{{ element.name }}">
+            {% endif %}
+            <!-- <div></div> -->
+            {% if scandir(element.path) | list | length == 0 %}
+            <a style="display: inline-block; opacity: 0.3" class="basic-item" href="javascript:void(0)" onclick="linkManager(this)" data-clipboard-target="{{ element.path }}"><li>{{ element.name }}</li></a>
+            {% else %}
+            <a style="display: inline-block" class="basic-item" href="javascript:void(0)" onclick="linkManager(this)" data-clipboard-target="{{ element.path }}"><li>{{ element.name }}</li></a>
+            {% endif %}
+            <!-- <div></div> -->
+      
+            {{ loop(scandir(element.path)) }}
+          </ul>
+          <!-- )  -->
+          {% endif %}
+          <!-- o -->
+          {% endfor %}
+
+      </div>
+        <!-- </div> -->
+      </ul>
+  </div>
+</div>
+</div>

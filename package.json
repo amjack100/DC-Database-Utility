@@ -1,0 +1,33 @@
+{
+  "name": "dc-search",
+  "version": "v1.0.5",
+  "description": "Search for projects on the DC servers",
+  "main": "./main.js",
+  "repository": "https://github.com/amjack100/design-collab-search.git",
+  "scripts": {
+    "start": "electron .",
+    "test": "parcel ./server-side/application/templates/index.html",
+    "build": "electron-builder --config electron-builder.yml"
+  },
+  "release": "build",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.0",
+    "bootstrap": "^4.5.2",
+    "electron-log": "^4.0.7",
+    "express": "^4.17.1",
+    "jquery": "^3.5.1",
+    "parcel-bundler": "^1.12.4",
+    "popper.js": "^1.16.1",
+    "sass": "^1.26.11",
+    "tcp-port-used": "^1.0.1"
+  },
+  "devDependencies": {
+    "electron-packager": "^15.1.0",
+    "electron": "^10.1.1",
+    "electron-reload": "^1.5.0",
+    "electron-builder": "22.8.1"
+  }
+}

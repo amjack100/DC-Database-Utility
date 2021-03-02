@@ -1,0 +1,5 @@
+asarUnpack:
+  - "./dist/application/"
+  - "./bookmarks.json"
+directories:
+  output: "./dist/electron"

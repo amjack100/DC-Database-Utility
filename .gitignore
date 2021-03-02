@@ -1,0 +1,9 @@
+node_modules/
+dist/
+build/
+.vscode/
+debug.log
+electron-test-win32-x64/
+.vscode/
+__pycache__/
+env/
